@@ -8,7 +8,6 @@ import {
   Hash,
   Mail,
   FileText,
-  Upload,
   Trash2,
   Settings,
   Eye,
@@ -19,7 +18,7 @@ import {
 } from 'lucide-react';
 
 // Type definitions
-type FieldType = 'text' | 'textarea' | 'select' | 'radio' | 'checkbox' | 'number' | 'email' | 'date' | 'file';
+type FieldType = 'text' | 'textarea' | 'select' | 'radio' | 'checkbox' | 'number' | 'email' | 'date';
 
 interface FieldOption {
   id: string;
@@ -37,6 +36,7 @@ interface FieldValidation {
 
 interface FormField {
   id: string;
+  field_id: string;
   type: FieldType;
   label: string;
   placeholder: string;
@@ -58,15 +58,14 @@ interface DraggedItem {
 
 // Field type definitions with icons
 const FIELD_TYPES = [
-  { type: 'text' as FieldType, label: 'Text Input', icon: Type },
-  { type: 'textarea' as FieldType, label: 'Text Area', icon: FileText },
-  { type: 'select' as FieldType, label: 'Select Dropdown', icon: List },
-  { type: 'radio' as FieldType, label: 'Radio Buttons', icon: Circle },
-  { type: 'checkbox' as FieldType, label: 'Checkbox Group', icon: CheckSquare },
-  { type: 'number' as FieldType, label: 'Number Input', icon: Hash },
-  { type: 'email' as FieldType, label: 'Email Input', icon: Mail },
-  { type: 'date' as FieldType, label: 'Date Picker', icon: Calendar },
-  { type: 'file' as FieldType, label: 'File Upload', icon: Upload },
+  { type: 'text' as FieldType, label: 'Text Input', icon: Type, field_id: "1" },
+  { type: 'textarea' as FieldType, label: 'Text Area', icon: FileText, field_id: "1" },
+  { type: 'select' as FieldType, label: 'Select Dropdown', icon: List, field_id: "1" },
+  { type: 'radio' as FieldType, label: 'Radio Buttons', icon: Circle, field_id: "1" },
+  { type: 'checkbox' as FieldType, label: 'Checkbox Group', icon: CheckSquare, field_id: "1" },
+  { type: 'number' as FieldType, label: 'Number Input', icon: Hash, field_id: "1" },
+  { type: 'email' as FieldType, label: 'Email Input', icon: Mail, field_id: "1" },
+  { type: 'date' as FieldType, label: 'Date Picker', icon: Calendar, field_id: "1" },
 ];
 
 // Generate unique ID
@@ -75,7 +74,8 @@ const generateId = () => `field_${idCounter++}`;
 
 // Default field configuration
 const getDefaultFieldConfig = (type: FieldType): FormField => ({
-  id: generateId(),
+  id: FIELD_TYPES.find(f => f.type === type)?.field_id || '',
+  field_id: generateId(),
   type,
   label: `${type.charAt(0).toUpperCase() + type.slice(1)} Field`,
   placeholder: type === 'textarea' ? 'Enter your text here...' : `Enter ${type}...`,
@@ -101,9 +101,10 @@ interface FormFieldProps {
   onSelect: (field: FormField) => void;
   onDelete: (fieldId: string) => void;
   onEdit: (field: FormField) => void;
+  isPreview: boolean;
 }
 
-const FormField: React.FC<FormFieldProps> = ({ field, isSelected, onSelect, onDelete, onEdit }) => {
+const FormField: React.FC<FormFieldProps> = ({ field, isSelected, onSelect, onDelete, onEdit, isPreview }) => {
   const renderFieldPreview = () => {
     switch (field.type) {
       case 'text':
@@ -114,7 +115,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, isSelected, onSelect, onDe
             placeholder={field.placeholder}
             defaultValue={field.defaultValue}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            readOnly
+            readOnly={!isPreview}
           />
         );
 
@@ -125,7 +126,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, isSelected, onSelect, onDe
             defaultValue={field.defaultValue}
             rows={3}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            readOnly
+            readOnly={!isPreview}
           />
         );
 
@@ -136,7 +137,7 @@ const FormField: React.FC<FormFieldProps> = ({ field, isSelected, onSelect, onDe
             placeholder={field.placeholder}
             defaultValue={field.defaultValue}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            readOnly
+            readOnly={!isPreview}
           />
         );
 
@@ -192,14 +193,6 @@ const FormField: React.FC<FormFieldProps> = ({ field, isSelected, onSelect, onDe
             defaultValue={field.defaultValue}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             readOnly
-          />
-        );
-
-      case 'file':
-        return (
-          <input
-            type="file"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         );
 
@@ -383,7 +376,7 @@ const FieldEditor: React.FC<FieldEditorProps> = ({ field, onUpdate, onClose }) =
                 <h4 className="text-md font-medium mb-4 text-gray-800">Options</h4>
                 <div className="space-y-3">
                   {localField.options.map((option, index) => (
-                    <div key={option.id} className="flex gap-2">
+                    <div key={`${option.id}-${index}`} className="flex gap-2">
                       <input
                         type="text"
                         placeholder="Option Label"
@@ -622,11 +615,11 @@ const FormBuilderCanvas: React.FC = () => {
         <div className="p-4">
           <h3 className="text-sm font-medium text-gray-700 mb-3 uppercase tracking-wide">Field Types</h3>
           <div className="space-y-2">
-            {FIELD_TYPES.map((fieldType) => {
+            {FIELD_TYPES.map((fieldType, index) => {
               const Icon = fieldType.icon;
               return (
                 <div
-                  key={fieldType.type}
+                  key={`${fieldType.type}-${index}`}
                   draggable
                   onDragStart={(e) => handleDragStart(e, fieldType.type)}
                   onClick={() => addField(fieldType.type)}
@@ -722,9 +715,10 @@ const FormBuilderCanvas: React.FC = () => {
                   </div>
                 ) : (
                   <div className="space-y-6">
-                    {fields.map((field) => (
+                    {fields.map((field, index) => (
                       <FormField
-                        key={field.id}
+                        isPreview
+                        key={`${field.id}-${index}`}
                         field={field}
                         isSelected={false}
                         onSelect={() => { }}
@@ -769,9 +763,10 @@ const FormBuilderCanvas: React.FC = () => {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {fields.map((field) => (
+                    {fields.map((field, index) => (
                       <FormField
-                        key={field.id}
+                        isPreview={false}
+                        key={`${field.id}-${index}`}
                         field={field}
                         isSelected={selectedField?.id === field.id}
                         onSelect={setSelectedField}
