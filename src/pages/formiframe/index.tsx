@@ -18,11 +18,11 @@ const Index = () => {
 					},
 					{
 						rel: "stylesheet",
-						href: "http:/localhost:5173/src/pages/formiframe/_components/form.min.css",
+						href: `${window.location.origin}/form.min.css`,
 						tag: "link",
 					},
 					{
-						src: "http://localhost:5173/src/pages/formiframe/_components/script.js",
+						src: `${window.location.origin}/script.js`,
 						tag: "script",
 						type: "text/javascript",
 					},
