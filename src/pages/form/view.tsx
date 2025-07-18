@@ -14,7 +14,7 @@ import {
   useChangeFormStatus,
   useGetFormApprovalLevels,
   useGetFormById,
-} from "./service";
+} from "../../api/service";
 import type { Approvallevel, RenderFormField } from "./types";
 import { convertApiFieldToConfig } from "../../helpers";
 import useAuthStore from "@/store/use-auth-store";

@@ -22,7 +22,7 @@ import {
   useGetFormById,
   useGetFormTypes,
   useUpdateForm,
-} from "./service";
+} from "../../api/service";
 import type { ApprovalPayload, FieldType, RenderFormField } from "./types";
 import FieldEditor from "./field-editor";
 import FormApprovalDialog from "@/components/custom/form-approval-dialog";

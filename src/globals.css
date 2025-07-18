@@ -3,12 +3,13 @@
 
 @custom-variant dark (&:is(.dark *));
 
-html, body, #root {
-  @apply h-full
+html,
+body,
+#root {
+  @apply h-full;
 }
 
 @theme inline {
-
   --radius-sm: calc(var(--radius) - 4px);
 
   --radius-md: calc(var(--radius) - 2px);
@@ -77,10 +78,10 @@ html, body, #root {
 
   --color-sidebar-border: var(--sidebar-border);
 
-  --color-sidebar-ring: var(--sidebar-ring);}
+  --color-sidebar-ring: var(--sidebar-ring);
+}
 
 :root {
-
   --radius: 0.625rem;
 
   --background: oklch(1 0 0);
@@ -143,10 +144,10 @@ html, body, #root {
 
   --sidebar-border: oklch(0.922 0 0);
 
-  --sidebar-ring: oklch(0.708 0 0);}
+  --sidebar-ring: oklch(0.708 0 0);
+}
 
 .dark {
-
   --background: oklch(0.145 0 0);
 
   --foreground: oklch(0.985 0 0);
@@ -207,10 +208,14 @@ html, body, #root {
 
   --sidebar-border: oklch(1 0 0 / 10%);
 
-  --sidebar-ring: oklch(0.556 0 0);}
+  --sidebar-ring: oklch(0.556 0 0);
+}
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;}
+    @apply border-border outline-ring/50;
+  }
   body {
-    @apply bg-background text-foreground;}}
+    @apply bg-background text-foreground;
+  }
+}

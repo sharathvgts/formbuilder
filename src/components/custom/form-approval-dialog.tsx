@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import { Save } from "lucide-react";
-import { useListRoles } from "@/pages/form/service";
+import { useListRoles } from "@/api/service";
 import type { ApprovalPayload } from "@/pages/form/types";
 
 const FormApprovalDialog = ({
@@ -28,14 +28,11 @@ const FormApprovalDialog = ({
 
   const { data: roles } = useListRoles();
 
-  // Mock roles data - replace with your actual roles
   const availableRoles =
     roles?.map((role) => ({ label: role.name, value: role.id })) || [];
 
-  // Reset approval roles when approval type changes
   useEffect(() => {
     const count = parseInt(approvalType);
-    console.log("count", count);
     if (count > 0) {
       setApprovalRoles(new Array(count).fill(""));
     } else {
