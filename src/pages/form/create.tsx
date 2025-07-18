@@ -55,9 +55,9 @@ const getDefaultFieldConfig = (type: FieldType): RenderFormField => ({
 
   options: ["select", "radio", "checkbox"].includes(type)
     ? [
-        { id: generateId(), label: "Option 1", value: "option1" },
-        { id: generateId(), label: "Option 2", value: "option2" },
-      ]
+      { id: generateId(), label: "Option 1", value: "option1" },
+      { id: generateId(), label: "Option 2", value: "option2" },
+    ]
     : [],
   validation: {
     minLength: "",
@@ -280,11 +280,10 @@ const FormBuilderCanvas: React.FC = () => {
             <div className="flex items-center gap-3">
               <Button
                 onClick={() => setShowPreview(!showPreview)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                  showPreview
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${showPreview
                     ? "bg-blue-600 text-white"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+                  }`}
               >
                 <Eye className="w-4 h-4" />
                 {showPreview ? "Edit Mode" : "Preview"}
@@ -344,9 +343,9 @@ const FormBuilderCanvas: React.FC = () => {
                         key={`${field.id}-${index}`}
                         field={field}
                         isSelected={false}
-                        onSelect={() => {}}
-                        onDelete={() => {}}
-                        onEdit={() => {}}
+                        onSelect={() => { }}
+                        onDelete={() => { }}
+                        onEdit={() => { }}
                       />
                     ))}
 

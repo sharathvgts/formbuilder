@@ -1,6 +1,6 @@
 import useAuthStore from "@/store/use-auth-store";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { Links, useNavigate } from "react-router";
 export default function LoginPage() {
   const [selectedUser, setSelectedUser] = useState("");
 
@@ -124,11 +124,10 @@ export default function LoginPage() {
           <button
             onClick={handleLogin}
             disabled={!selectedUser}
-            className={`w-full py-3 px-4 rounded-lg font-semibold transition duration-200 ${
-              selectedUser
-                ? "bg-purple-600 hover:bg-purple-700 text-white"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
-            }`}
+            className={`w-full py-3 px-4 rounded-lg font-semibold transition duration-200 ${selectedUser
+              ? "bg-purple-600 hover:bg-purple-700 text-white"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
           >
             Login
           </button>

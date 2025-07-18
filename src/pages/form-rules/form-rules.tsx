@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Plus, Trash2, Eye, EyeOff, Settings, Play, Save } from "lucide-react";
+import { Plus, Trash2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,20 +18,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 
 // Types
 interface FormField {
   id: string;
   type:
-    | "text"
-    | "email"
-    | "number"
-    | "select"
-    | "checkbox"
-    | "radio"
-    | "textarea"
-    | "date";
+  | "text"
+  | "email"
+  | "number"
+  | "select"
+  | "checkbox"
+  | "radio"
+  | "textarea"
+  | "date";
   label: string;
   placeholder?: string;
   required: boolean;
@@ -48,13 +47,13 @@ interface FormRule {
   };
   actions: {
     type:
-      | "show"
-      | "hide"
-      | "enable"
-      | "disable"
-      | "require"
-      | "unrequire"
-      | "set_value";
+    | "show"
+    | "hide"
+    | "enable"
+    | "disable"
+    | "require"
+    | "unrequire"
+    | "set_value";
     target: string;
     value?: string;
   }[];
@@ -107,7 +106,7 @@ const ruleSchema = z.object({
         ]),
         target: z.string().min(1, "Action target is required"),
         value: z.string().optional(),
-      })
+      }),
     )
     .min(1, "At least one action is required"),
   enabled: z.boolean(),
@@ -153,15 +152,15 @@ export default function DynamicFormBuilder() {
     fields: [],
     rules: [],
   });
-  const [selectedField, setSelectedField] = useState<string>("");
-  const [previewData, setPreviewData] = useState({});
+  // const [selectedField, setSelectedField] = useState<string>("");
+  // const [previewData, setPreviewData] = useState({});
 
   // Form Builder Form
   const formBuilderForm = useForm({
     resolver: zodResolver(
       z.object({
         fields: z.array(fieldSchema),
-      })
+      }),
     ),
     defaultValues: {
       fields: [],
@@ -182,7 +181,7 @@ export default function DynamicFormBuilder() {
     resolver: zodResolver(
       z.object({
         rules: z.array(ruleSchema),
-      })
+      }),
     ),
     defaultValues: {
       rules: [],
@@ -247,7 +246,7 @@ export default function DynamicFormBuilder() {
   const FieldBuilder = React.memo(({ fieldIndex }: { fieldIndex: number }) => {
     const fieldData = formBuilderForm.watch(`fields.${fieldIndex}`);
     const [localOptions, setLocalOptions] = useState(
-      fieldData?.options?.join("\n") || ""
+      fieldData?.options?.join("\n") || "",
     );
 
     const handleOptionsChange = (value: string) => {
@@ -288,7 +287,7 @@ export default function DynamicFormBuilder() {
                 onValueChange={(value) =>
                   formBuilderForm.setValue(
                     `fields.${fieldIndex}.type`,
-                    value as any
+                    value as FormField["type"],
                   )
                 }
               >
@@ -335,7 +334,7 @@ export default function DynamicFormBuilder() {
               onCheckedChange={(checked) =>
                 formBuilderForm.setValue(
                   `fields.${fieldIndex}.required`,
-                  checked
+                  checked,
                 )
               }
             />
@@ -377,7 +376,7 @@ export default function DynamicFormBuilder() {
                 onCheckedChange={(checked) =>
                   rulesBuilderForm.setValue(
                     `rules.${ruleIndex}.enabled`,
-                    checked
+                    checked,
                   )
                 }
               />
@@ -412,7 +411,7 @@ export default function DynamicFormBuilder() {
                   onValueChange={(value) =>
                     rulesBuilderForm.setValue(
                       `rules.${ruleIndex}.trigger.field`,
-                      value
+                      value,
                     )
                   }
                 >
@@ -435,7 +434,7 @@ export default function DynamicFormBuilder() {
                   onValueChange={(value) =>
                     rulesBuilderForm.setValue(
                       `rules.${ruleIndex}.trigger.condition`,
-                      value
+                      value,
                     )
                   }
                 >
@@ -456,7 +455,7 @@ export default function DynamicFormBuilder() {
                 <Input
                   key={`rule-${ruleIndex}-trigger-value`}
                   {...rulesBuilderForm.register(
-                    `rules.${ruleIndex}.trigger.value`
+                    `rules.${ruleIndex}.trigger.value`,
                   )}
                   placeholder="Trigger value"
                 />
@@ -467,7 +466,7 @@ export default function DynamicFormBuilder() {
           <div className="border rounded-lg p-4">
             <h4 className="font-semibold mb-3">Actions</h4>
             {ruleData?.actions?.map((action, actionIndex) => (
-              <div key={actionIndex} className="grid grid-cols-3 gap-4 mb-3">
+              <div key={actionIndex.toString()} className="grid grid-cols-3 gap-4 mb-3">
                 <div>
                   <Label>Action Type</Label>
                   <Select
@@ -475,7 +474,7 @@ export default function DynamicFormBuilder() {
                     onValueChange={(value) =>
                       rulesBuilderForm.setValue(
                         `rules.${ruleIndex}.actions.${actionIndex}.type`,
-                        value as any
+                        value as FormRule["actions"][number]["type"],
                       )
                     }
                   >
@@ -501,7 +500,7 @@ export default function DynamicFormBuilder() {
                     onValueChange={(value) =>
                       rulesBuilderForm.setValue(
                         `rules.${ruleIndex}.actions.${actionIndex}.target`,
-                        value
+                        value,
                       )
                     }
                   >
@@ -520,9 +519,9 @@ export default function DynamicFormBuilder() {
                 <div>
                   <Label>Value (if needed)</Label>
                   <Input
-                    key={`rule-${ruleIndex}-action-${actionIndex}-value`}
+                    key={`rule-${ruleIndex}-action-${actionIndex.toString()}-value`}
                     {...rulesBuilderForm.register(
-                      `rules.${ruleIndex}.actions.${actionIndex}.value`
+                      `rules.${ruleIndex}.actions.${actionIndex}.value`,
                     )}
                     placeholder="Action value"
                   />
@@ -559,7 +558,7 @@ export default function DynamicFormBuilder() {
         const conditionMet = evaluateCondition(
           triggerValue,
           rule.trigger.condition,
-          rule.trigger.value
+          rule.trigger.value,
         );
 
         if (conditionMet) {
@@ -592,7 +591,7 @@ export default function DynamicFormBuilder() {
     const evaluateCondition = (
       fieldValue: any,
       condition: string,
-      targetValue: string
+      targetValue: string,
     ): boolean => {
       switch (condition) {
         case "equals":

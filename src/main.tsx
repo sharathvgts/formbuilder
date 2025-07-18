@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LoginPage from "./pages/login.tsx";
 import FormIoBuilder from "./pages/form-rules/formio-builder.tsx";
 import DynamicFormRenderer from "./pages/FormIo/FormRender.tsx";
+import Index from "./pages/formiframe/index.tsx";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ createRoot(document.getElementById("root")!).render(
             path="/form/form-render/:formId"
             element={<DynamicFormRenderer />}
           />
+          <Route path="/form/iframeform" element={<Index />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

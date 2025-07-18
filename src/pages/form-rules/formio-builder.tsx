@@ -3,17 +3,17 @@ import {
 	useGetDynamicForm2,
 	useUpdateDynamicForm2,
 } from "@/api/service";
-import { Button } from "@/components/ui/button";
+
 import {
-	FormBuilder,
+
 	FormEdit,
 	type FormType,
 	FormioProvider,
 } from "@formio/react";
-import { Save } from "lucide-react";
+
 import { useCallback, useEffect, useState } from "react";
 import "@formio/js/dist/formio.full.min.css";
-// import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/css/bootstrap.css";
 import { useParams } from "react-router";
 
 const FormIoBuilder = () => {
